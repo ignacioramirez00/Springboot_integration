@@ -1,24 +1,45 @@
 package com.api.apitest.persistence.integration.marvel.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.api.apitest.dto.MyPageable;
+import com.api.apitest.persistence.integration.marvel.dto.CharacterDto;
+
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.api.apitest.dto.MyPageable;
 import com.api.apitest.persistence.integration.MarvelAPIConfig;
-import com.api.apitest.persistence.integration.marvel.dto.CharacterDto;
-import com.api.apitest.persistence.integration.marvel.dto.CharacterDto.CharacterInfoDto;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.api.apitest.persistence.integration.marvel.*;
 
 @Repository
 public class CharacterRepository {
 
     @Autowired
     private MarvelAPIConfig marvelAPIConfig;
+    @Autowired
+    private HttpClientService httpClientService;
 
-    @Override
+    @Value("${integration.marvel.base-path}")
+    private String basePath;
+    
+    private String characterPath;
+
+    /**
+     * Inicializa la URL base para acceder a los personajes en la API de Marvel.
+     */
+    @PostConstruct
+    private void setPath(){
+        characterPath = basePath.concat("/").concat("characters");
+    }
+
+    
     public List<CharacterDto> findAll(MyPageable myPageable, String name, int[] comics, int[] series) {
 
         Map<String, String> marvelQueryParams = getQueryParamsForFindAll(myPageable, name, comics, series);
@@ -29,8 +50,7 @@ public class CharacterRepository {
     private Map<String, String> getQueryParamsForFindAll(MyPageable myPageable, String name, int[] comics,int[] series) {
         
         Map<String, String> queryParams = marvelAPIConfig.getAuthenticationQueryParams();
-        
-        // Agregar parámetros de paginación
+
         if (myPageable != null) {
             queryParams.put("limit", String.valueOf(myPageable.limit()));
             queryParams.put("offset", String.valueOf(myPageable.offset()));
@@ -64,8 +84,14 @@ public class CharacterRepository {
         return sb.toString();
     }
 
-    @Override
-    public CharacterInfoDto findById(long characterId) {
-        return null;
+    public CharacterDto.CharacterInfoDto findById(long characterId) {
+        Map<String, String> queryParams = marvelAPIConfig.getAuthenticationQueryParams();
+        
+        // aca lo que hago es llamar a la url base para hacer la peticion y le agrego el id necesario
+        String finalUrl = characterPath.concat("/").concat(Long.toString(characterId));  
+
+        JsonNode response = httpClientService.doGet(finalUrl,queryParams,JsonNode.class);
+
+        return CharacterMapper.toDtoList(response).get(0);
     }
 }

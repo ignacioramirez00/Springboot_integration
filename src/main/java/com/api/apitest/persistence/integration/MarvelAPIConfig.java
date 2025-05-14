@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.api.apitest.dto.MyPageable;
+
 @Component
 public class MarvelAPIConfig {
 
@@ -32,5 +34,10 @@ public class MarvelAPIConfig {
         queryParams.put("apikey", publicKey);
         queryParams.put("hash", getHash());
         return queryParams;
+    }
+
+    public Map<String, String> getQueryParamsForFindAll(MyPageable myPageable, long characterId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getQueryParamsForFindAll'");
     }
 }
