@@ -7,9 +7,8 @@ public record CharacterDto(Long id,
         String resourceURI) {
 
     public record CharacterInfoDto(
-        String imagePathString, 
+        String imagePath, 
         String description) 
         {
-
         }
 }

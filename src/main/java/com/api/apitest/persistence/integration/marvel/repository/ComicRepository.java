@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.api.apitest.dto.MyPageable;
 import com.api.apitest.persistence.integration.MarvelAPIConfig;
 import com.api.apitest.persistence.integration.marvel.dto.ComicDto;
+import com.api.apitest.services.HttpClientService;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.annotation.PostConstruct;
 
 @Repository

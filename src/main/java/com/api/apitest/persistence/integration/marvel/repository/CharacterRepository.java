@@ -3,6 +3,8 @@ package com.api.apitest.persistence.integration.marvel.repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.api.apitest.dto.MyPageable;
 import com.api.apitest.persistence.integration.marvel.dto.CharacterDto;
+import com.api.apitest.services.HttpClientService;
+
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class CharacterRepository {
 
         Map<String, String> marvelQueryParams = getQueryParamsForFindAll(myPageable, name, comics, series);
         JsonNode response = httpClientService.doGet(characterPath, marvelQueryParams, JsonNode.class);
-        return null;
+        return CharacterMapper.toDtoList(response); 
     }
 
     private Map<String, String> getQueryParamsForFindAll(MyPageable myPageable, String name, int[] comics,int[] series) {
@@ -84,14 +86,11 @@ public class CharacterRepository {
         return sb.toString();
     }
 
-    public CharacterDto.CharacterInfoDto findById(long characterId) {
+    public CharacterDto.CharacterInfoDto findInfoById(long characterId) {
         Map<String, String> queryParams = marvelAPIConfig.getAuthenticationQueryParams();
-        
         // aca lo que hago es llamar a la url base para hacer la peticion y le agrego el id necesario
         String finalUrl = characterPath.concat("/").concat(Long.toString(characterId));  
-
         JsonNode response = httpClientService.doGet(finalUrl,queryParams,JsonNode.class);
-
-        return CharacterMapper.toDtoList(response).get(0);
+        return CharacterMapper.toInfoDtoList(response).get(0);
     }
 }
