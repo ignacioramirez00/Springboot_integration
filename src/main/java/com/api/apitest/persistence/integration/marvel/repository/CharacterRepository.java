@@ -3,22 +3,16 @@ package com.api.apitest.persistence.integration.marvel.repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.api.apitest.dto.MyPageable;
 import com.api.apitest.persistence.integration.marvel.dto.CharacterDto;
+import com.api.apitest.persistence.integration.marvel.mapper.CharacterMapper;
 import com.api.apitest.services.HttpClientService;
-
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
-
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.api.apitest.persistence.integration.MarvelAPIConfig;
-import com.api.apitest.persistence.integration.marvel.*;
+
 
 @Repository
 public class CharacterRepository {

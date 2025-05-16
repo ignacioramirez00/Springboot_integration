@@ -1,4 +1,4 @@
-package com.api.apitest.persistence.integration.marvel;
+package com.api.apitest.persistence.integration.marvel.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class CharacterMapper {
 
-    // esto es lo que va a hacer el mapper con lo que recibe de la api
+    // esto es lo que va a hacer el mapper con lo que recibe de la api   MAPEADOR DE JSON A DTOS
     public static List<CharacterDto> toDtoList(JsonNode response) {
 
         ArrayNode results = getResultsNode(response);
@@ -39,6 +39,9 @@ public class CharacterMapper {
     }
 
     private static ArrayNode getResultsNode(JsonNode response) {
+        if (response == null) {
+            throw new IllegalArgumentException("The node cannot be null");
+        }
         JsonNode data = response.get("data");
         ArrayNode results = (ArrayNode) data.get("results");
         return results;
@@ -59,12 +62,10 @@ public class CharacterMapper {
             throw new IllegalArgumentException("The node cannot be null");
         }
 
-        ThumbnailDto thumbnail = new ThumbnailDto(
-                characterNode.get("thumbnail").get("path").asText(),
-                characterNode.get("thumbnail").get("extension").asText());
-        
+        ThumbnailDto thumbnail =   ThumbnailMapper.toDto(characterNode.get("thumbnail"));
         String image = thumbnail.path() + "." + thumbnail.extension();
 
+        
         CharacterDto.CharacterInfoDto dto = new CharacterDto.CharacterInfoDto(
                 image,
                 characterNode.get("description").asText());

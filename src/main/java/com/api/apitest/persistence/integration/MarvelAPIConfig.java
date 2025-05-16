@@ -1,6 +1,7 @@
 package com.api.apitest.persistence.integration;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,9 +19,9 @@ public class MarvelAPIConfig {
     private PasswordEncoder md5Encoder;
 
     private Long timestamp = new Date(System.currentTimeMillis()).getTime();
-    @Value("${integration.marvel.publicKey}")
+    @Value("${integration.marvel.public-key}")
     private String publicKey;
-    @Value("${integration.marvel.privateKey}")
+    @Value("${integration.marvel.private-key}")
     private String privateKey;
 
     private String getHash() {
@@ -29,7 +30,7 @@ public class MarvelAPIConfig {
     }
 
     public Map<String,String> getAuthenticationQueryParams() {
-        Map<String,String> queryParams = new java.util.HashMap<>();
+        Map<String,String> queryParams = new HashMap<>();
         queryParams.put("ts", Long.toString(timestamp));
         queryParams.put("apikey", publicKey);
         queryParams.put("hash", getHash());
@@ -37,7 +38,12 @@ public class MarvelAPIConfig {
     }
 
     public Map<String, String> getQueryParamsForFindAll(MyPageable myPageable, long characterId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getQueryParamsForFindAll'");
+        Map<String, String> queryParams = getAuthenticationQueryParams();
+        queryParams.put("limit", String.valueOf(myPageable.limit()));
+        queryParams.put("offset", String.valueOf(myPageable.offset()));
+        if (characterId > 0) {
+            queryParams.put("characterId", String.valueOf(characterId));
+        }
+        return queryParams;
     }
 }

@@ -6,7 +6,7 @@ public record ComicDto(
     String description,
     String modified,
     String resourceURI,
-    ThumbnaiDto thumbnail)
+    ThumbnailDto thumbnail)
 {
 
 }

@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApitestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApitestApplication.class, args);
-		System.out.println("hola");
 	}
 
 }

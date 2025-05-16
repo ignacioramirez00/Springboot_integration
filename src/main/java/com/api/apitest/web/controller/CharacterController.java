@@ -32,6 +32,7 @@ public class CharacterController {
                         @RequestParam(required = false) long limit)
 
         {
+                System.out.println("llegue");
                 MyPageable myPageable = new MyPageable(offset, limit);
                 return ResponseEntity.ok(characterService.findAll(myPageable, name, comics, series));
         }
@@ -40,6 +41,7 @@ public class CharacterController {
         // punto 3) 
         @GetMapping("/{characterId}")
         public ResponseEntity<CharacterDto.CharacterInfoDto> findById(@PathVariable long characterId) {
+                
                 return ResponseEntity.ok(characterService.findById(characterId));
         }
 
